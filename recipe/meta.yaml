@@ -1,0 +1,125 @@
+{% set version = '0.2.6' %}
+
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-honestdid
+  version: {{ version|replace("-", "_") }}
+
+source:
+  url:
+    - {{ cran_mirror }}/src/contrib/HonestDiD_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/HonestDiD/HonestDiD_{{ version }}.tar.gz
+  sha256: 5529b74950a6b7ab3600fd593eeca3431885c1ca9252fc3d9982a74f893a98fb
+
+build:
+  merge_build_host: True  # [win]
+  # If this is a new build for the same version, increment the build number.
+  number: 0
+  # no skip
+
+  # This is required to make R link correctly on Linux.
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+# Suggests: knitr, testthat, haven, lfe, rmarkdown
+requirements:
+  build:
+    - {{ posix }}zip               # [win]
+
+  host:
+    - r-base {{ rbase }}
+    - r-cvxr >=0.99_6
+    - r-matrix >=1.2_17
+    - r-rglpk >=0.6_4
+    - r-truncatednormal >=1.0
+    - r-dplyr >=0.7.4
+    - r-foreach >=1.4.7
+    - r-ggplot2 >=2.2.1
+    - r-latex2exp >=0.4.0
+    - r-lpsolveapi >=5.5.2.0_17
+    - r-matrixstats >=0.63.0
+    - r-mvtnorm >=1.1_3
+    - r-pracma >=2.2.5
+    - r-purrr >=0.3.4
+    - r-rlang
+    - r-tibble >=1.3.4
+
+  run:
+    - r-base {{ rbase }}
+    - r-cvxr >=0.99_6
+    - r-matrix >=1.2_17
+    - r-rglpk >=0.6_4
+    - r-truncatednormal >=1.0
+    - r-dplyr >=0.7.4
+    - r-foreach >=1.4.7
+    - r-ggplot2 >=2.2.1
+    - r-latex2exp >=0.4.0
+    - r-lpsolveapi >=5.5.2.0_17
+    - r-matrixstats >=0.63.0
+    - r-mvtnorm >=1.1_3
+    - r-pracma >=2.2.5
+    - r-purrr >=0.3.4
+    - r-rlang
+    - r-tibble >=1.3.4
+
+test:
+  commands:
+    # You can put additional test commands to be run here.
+    - $R -e "library('HonestDiD')"           # [not win]
+    - "\"%R%\" -e \"library('HonestDiD')\""  # [win]
+
+  # You can also put a file called run_test.py, run_test.sh, or run_test.bat
+  # in the recipe that will be run at test time.
+
+  # requires:
+    # Put any additional test requirements here.
+
+about:
+  home: https://CRAN.R-project.org/package=HonestDiD
+  license: MIT
+  summary: Provides functions to conduct robust inference in difference-in-differences and event
+    study designs by implementing the methods developed in Rambachan & Roth (2023) <doi:10.1093/restud/rdad018>,
+    "A More Credible Approach to Parallel Trends" [Previously titled "An Honest Approach..."].
+    Inference is conducted under a weaker version of the parallel trends assumption.
+    Uniformly valid confidence sets are constructed based upon conditional confidence
+    sets, fixed-length confidence sets and hybridized confidence sets.
+  license_family: MIT
+  license_file:
+    - '{{ environ["PREFIX"] }}/lib/R/share/licenses/MIT'
+    - LICENSE
+
+# The original CRAN metadata for this package was:
+
+# Package: HonestDiD
+# Type: Package
+# Title: Robust Inference in Difference-in-Differences and Event Study Designs
+# Version: 0.2.6
+# Depends: R (>= 3.6.0)
+# Imports: stats, rlang, foreach (>= 1.4.7), matrixStats (>= 0.63.0), CVXR (>= 0.99-6), latex2exp (>= 0.4.0), lpSolveAPI (>= 5.5.2.0-17), Matrix (>= 1.2-17), pracma (>= 2.2.5), purrr (>= 0.3.4), tibble (>= 1.3.4), dplyr (>= 0.7.4), ggplot2 (>= 2.2.1), Rglpk (>= 0.6-4), mvtnorm (>= 1.1-3), TruncatedNormal (>= 1.0)
+# Suggests: knitr, testthat, haven, lfe, rmarkdown
+# Authors@R: c(person(given = "Ashesh", family = "Rambachan", role = c("aut", "cph", "cre"), email = "ashesh.a.rambachan@gmail.com"), person(given = "Jonathan", family = "Roth", role = c("aut", "cph"), email = "jonathan_roth@brown.edu"))
+# Description: Provides functions to conduct robust inference in difference-in-differences and event study designs by implementing the methods developed in Rambachan & Roth (2023) <doi:10.1093/restud/rdad018>, "A More Credible Approach to Parallel Trends" [Previously titled "An Honest Approach..."]. Inference is conducted under a weaker version of the parallel trends assumption. Uniformly valid confidence sets are constructed based upon conditional confidence sets, fixed-length confidence sets and hybridized confidence sets.
+# Encoding: UTF-8
+# LazyData: true
+# License: MIT + file LICENSE
+# NeedsCompilation: no
+# Packaged: 2024-07-12 00:19:14 UTC; asheshr
+# Author: Ashesh Rambachan [aut, cph, cre], Jonathan Roth [aut, cph]
+# Maintainer: Ashesh Rambachan <ashesh.a.rambachan@gmail.com>
+# Repository: CRAN
+# Date/Publication: 2024-07-14 11:40:02 UTC
+
+# See
+# https://docs.conda.io/projects/conda-build for
+# more information about meta.yaml
+
+extra:
+  anaconda-services:
+    ref: https://anaconda.zendesk.com/agent/tickets/58810
+    reason: Client request
+  recipe-maintainers:
+    - ianaobi
+
